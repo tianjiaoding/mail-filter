@@ -38,17 +38,14 @@ return
         ->post('/mail_rules', 'mail_rules.create', Controllers\CreateRuleController::class)
         ->delete('/mail_rules/{id}', 'mail_rules.delete', Controllers\DeleteRuleController::class)
         ->patch('/mail_rules/{id}', 'mail_rules.update', Controllers\UpdateRuleController::class),
-    new Extend\Compat(function (Dispatcher $events)
-    {
-        $events->listen(Saving::class, function (Saving $event)
-        {
-            $email = array_get($event->data, "attributes.email");
+    (new Extend\Event())
+        ->listen(Saving::class, function (Saving $event) {
+            $email = Arr::get($event->data, 'attributes.email');
 
-            if ($email !== null && MailValidator::validate($email) !== 0)
-            {
+            if (!empty($email) && MailValidator::validate($email) !== 0) {
                 throw new ValidationException([
-                    app("translator")->trans("studosi-mail-filter.forum.error.generic")]);
+                    resolve('translator')->trans('studosi-mail-filter.forum.error.generic'),
+                ]);
             }
-        });
-    })
+        }),
 ];
