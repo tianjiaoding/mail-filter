@@ -20,6 +20,7 @@ namespace Studosi\MailFilter;
 
 use Flarum\Extend;
 use Flarum\User\Event\Saving;
+use Illuminate\Support\Arr;
 use Illuminate\Events\Dispatcher;
 use Studosi\MailFilter\Api\Controllers;
 use Studosi\MailFilter\Validators\MailValidator;
